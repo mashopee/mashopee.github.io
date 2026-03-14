@@ -379,28 +379,12 @@
                 b.innerText = "✓ Đã copy";
                 setTimeout(() => { b.innerText = "Copy"; }, 2000);
             } else {
-                navigator.clipboard.write([
-    new ClipboardItem({
-        "text/plain": fetch(GOOGLE_SCRIPT_URL + "?short_url=" + encodeURIComponent(val), { signal: controller.signal })
-            .then(r => r.json())
-            .then(data => {
-                document.getElementById("convert-count").innerText = Number(data.total_conversions).toLocaleString('vi-VN');
-                var final = build(data.long_url);
-                if (final) {
-                    document.getElementById("result").value = final;
-                    document.getElementById("result-area").style.display = "block";
-                }
-                return new Blob([final || ""], { type: "text/plain" });
-            })
-    })
-]).then(() => {
-    document.getElementById("copy-btn").innerText = "✓ Đã copy";
-    setTimeout(() => { document.getElementById("copy-btn").innerText = "Copy"; }, 2000);
-}).catch(e => {
-    showErr("Lỗi kết nối hoặc không hỗ trợ.");
-}).finally(() => {
-    resetBtn();
-});
+                navigator.clipboard.writeText(text).then(() => {
+                    b.innerText = "✓ Đã copy";
+                    setTimeout(() => { b.innerText = "Copy"; }, 2000);
+                }).catch(() => {
+                    b.innerText = "Thủ công copy";
+                });
             }
         }
 
